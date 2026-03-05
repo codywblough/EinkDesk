@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "EPD_3in97.h"
-#include "GUI_Paint.h"
-#include "fonts.h"
+#include "waveshare/EPD_3in97.h"
+#include "waveshare/GUI_Paint.h"
+#include "waveshare/fonts.h"
 // #include "SD_MMC.h"
 // #include "FS.h"
 // #include "esp_vfs_fat.h"
