@@ -17,18 +17,18 @@ https://www.waveshare.com/esp32-s3-epaper-3.97.htm
 
 Some various files used within this project were developed by Waveshare and taken from the provided example programs to enable the functionality of the development board. These files are as follows:
 
-* src/Debug.h
-* src/DEV\_Config.cpp
-* src/DEV\_Config.h
-* src/EPD\_3in97.cpp
-* src/EPD\_3in97.h
-* src/font8.cpp
-* src/font12.cpp
-* src/font16.cpp
-* src/font20.cpp
-* src/font24.cpp
-* src/GUI\_Paint.cpp
-* src/GUI\_Paint.h
+* src/waveshare/Debug.h
+* src/waveshare/DEV\_Config.cpp
+* src/waveshare/DEV\_Config.h
+* src/waveshare/EPD\_3in97.cpp
+* src/waveshare/EPD\_3in97.h
+* src/waveshare/font8.cpp
+* src/waveshare/font12.cpp
+* src/waveshare/font16.cpp
+* src/waveshare/font20.cpp
+* src/waveshare/font24.cpp
+* src/waveshare/GUI\_Paint.cpp
+* src/waveshare/GUI\_Paint.h
 
 Some modifications exist within these files but for the most part they are unmodified.
 
