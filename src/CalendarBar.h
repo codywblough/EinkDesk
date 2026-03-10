@@ -41,6 +41,7 @@ class CalendarBar
     void initCalendarBarEvents();
     void drawCalendarBar();
     void drawPointer();
+    void drawEventInfo();
 
 };
 

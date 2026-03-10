@@ -83,7 +83,9 @@ void CalendarBar::initCalendarBarEvents()
         // startHour:startMin-endHour:endMin
         // Read in the two lines
         title = this->sdCont->openedFile.readStringUntil('\n');
+        title.trim();
         line = this->sdCont->openedFile.readStringUntil('\n');
+        line.trim();
         // Separate the 2nd line into the data
         startHour = line.substring(0, line.indexOf(':')).toInt();
         startMin = line.substring(line.indexOf(':') + 1, line.indexOf('-')).toInt();
@@ -178,4 +180,90 @@ void CalendarBar::drawPointer()
         this->screenCont->drawLine(0, pointerHeight - 5, 15, pointerHeight, BLACK, DOT_PIXEL_3X3, LINE_STYLE_SOLID);
         this->screenCont->drawLine(0, pointerHeight + 5, 15, pointerHeight, BLACK, DOT_PIXEL_3X3, LINE_STYLE_SOLID);
     }
+}
+
+void CalendarBar::drawEventInfo()
+{
+    // Get minutes since midnight for right now
+    int currentMins = timeinfo->tm_hour * 60 + timeinfo->tm_min;
+    // Check if there are any events today
+    if (this->eventCount > 0)
+    {
+        // If so, loop through them to see if currentMins falls between a start and end time for an event
+        int prevEventIdx = -1; // Default -1 so we can easily tell if there was nothing before
+        int currEventIdx = -1; // Default -1 so we can easily tell if we aren't in an event
+        int nextEventIdx = -1; // Default -1 so we can easily tell if there is nothing after
+        for (int i = 0; i < this->eventCount; i++)
+        {
+            // Save the index of the last event that ended
+            if (currentMins > this->calendarEvents[i].getEndTimeMins())
+                prevEventIdx = i;
+            // Save the index of the next event that ended (and check that this hasn't been set yet so we don't keep reassigning)
+            if (currentMins < this->calendarEvents[i].getStartTimeMins() && nextEventIdx == -1)
+                nextEventIdx = i;
+            if (currentMins > this->calendarEvents[i].getStartTimeMins() && currentMins < this->calendarEvents[i].getEndTimeMins())
+            {
+                // Save the current event index
+                currEventIdx = i;
+                
+                // Check that we aren't on the last event. If we aren't, save the next event's index
+                if (i < this->eventCount - 1)
+                    nextEventIdx = i + 1;
+
+                // Don't neet to check any other events
+                break;
+            }
+            
+            
+        }
+
+        // TODO: Needs checks in place to add a ... to any title that is too long to be displayed
+
+        // Event printing handling:
+        // Previous event:
+        if (prevEventIdx == -1)
+        {
+            // No previous events
+            this->screenCont->writeString(80, 70, "No Event", &Font12, BLACK, WHITE, 2, 0);
+        }
+        else
+        {
+            // Display the previous event
+            this->screenCont->writeString(80, 70, (const char*)(this->calendarEvents[prevEventIdx].getTitle().c_str()), &Font12, BLACK, WHITE, 2, 0);
+        }
+        
+        // Current event:
+        // Draw a divider line
+        this->screenCont->drawLine(80, 145, 350, 145, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+        if (currEventIdx == -1)
+        {
+            // No event in progress
+            this->screenCont->writeString(100, 150, "No Event", &Font24, BLACK, WHITE, 2, 0);
+        }
+        else
+        {
+            // Display the current event
+            this->screenCont->writeString(100, 150, (const char*)(this->calendarEvents[currEventIdx].getTitle().c_str()), &Font24, BLACK, WHITE, 2, 0);
+        }
+        
+        // Next event:
+        // Draw a divider line
+        this->screenCont->drawLine(80, 245, 350, 245, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+        if (nextEventIdx == -1)
+        {
+            // No upcoming events
+            this->screenCont->writeString(80, 250, "No Event", &Font12, BLACK, WHITE, 2, 0);
+        }
+        else
+        {
+            // Display the upcoming event
+            this->screenCont->writeString(80, 250, (const char*)(this->calendarEvents[nextEventIdx].getTitle().c_str()), &Font12, BLACK, WHITE, 2, 0);
+        }
+    }
+    else
+    {
+        // If there are no events today, just display "No Event"
+        this->screenCont->writeString(100, 150, "No Event", &Font24, BLACK, WHITE, 2, 0);
+    }
+    
 }

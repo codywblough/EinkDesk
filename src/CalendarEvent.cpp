@@ -44,3 +44,8 @@ int CalendarEvent::getEndTimeMins()
 {
     return this->endMinsSinceMidnight;
 }
+
+String CalendarEvent::getTitle()
+{
+    return this->eventTitle;
+}

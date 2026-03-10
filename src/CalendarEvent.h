@@ -21,6 +21,7 @@ class CalendarEvent
     int getEventMins();
     int getStartTimeMins();
     int getEndTimeMins();
+    String getTitle();
 };
 
 #endif

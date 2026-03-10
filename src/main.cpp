@@ -193,6 +193,7 @@ void update()
         screenCont.display();
         DEV_Delay_ms(3000);
     }
+
     // Update display every minute
     if (timeinfo.tm_min != lastMin)
     {
@@ -206,6 +207,7 @@ void update()
         // Draw the calendar bar and the pointer
         calBar.drawCalendarBar();
         calBar.drawPointer();
+        calBar.drawEventInfo();
         // Draw the clock/date
         displayTimeInfo();
         // Forecast update
