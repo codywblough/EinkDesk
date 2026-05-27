@@ -218,6 +218,9 @@ void CalendarBar::drawEventInfo()
         }
 
         // TODO: Needs checks in place to add a ... to any title that is too long to be displayed
+        int maxSmallChars = 20;
+        int maxBigChars = 13;
+        String tempEvent = "";
 
         // Event printing handling:
         // Previous event:
@@ -229,26 +232,32 @@ void CalendarBar::drawEventInfo()
         else
         {
             // Display the previous event
-            this->screenCont->writeString(80, 70, (const char*)(this->calendarEvents[prevEventIdx].getTitle().c_str()), &Font12, BLACK, WHITE, 2, 0);
+            tempEvent = this->calendarEvents[prevEventIdx].getTitle().c_str();
+            if (tempEvent.length() > maxSmallChars)
+                tempEvent = tempEvent.substring(0, maxSmallChars - 3) + "...";
+            this->screenCont->writeString(80, 70, (const char*)(tempEvent.c_str()), &Font12, BLACK, WHITE, 2, 0);
         }
         
         // Current event:
         // Draw a divider line
-        this->screenCont->drawLine(80, 145, 350, 145, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+        this->screenCont->drawLine(80, 145, 370, 145, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
         if (currEventIdx == -1)
         {
             // No event in progress
-            this->screenCont->writeString(100, 150, "No Event", &Font24, BLACK, WHITE, 2, 0);
+            this->screenCont->writeString(90, 150, "No Event", &Font16, BLACK, WHITE, 2, 0);
         }
         else
         {
             // Display the current event
-            this->screenCont->writeString(100, 150, (const char*)(this->calendarEvents[currEventIdx].getTitle().c_str()), &Font24, BLACK, WHITE, 2, 0);
+            tempEvent = this->calendarEvents[currEventIdx].getTitle().c_str();
+            if (tempEvent.length() > maxBigChars)
+                tempEvent = tempEvent.substring(0, maxBigChars - 3) + "...";
+            this->screenCont->writeString(90, 150, (const char*)(tempEvent.c_str()), &Font16, BLACK, WHITE, 2, 0);
         }
         
         // Next event:
         // Draw a divider line
-        this->screenCont->drawLine(80, 245, 350, 245, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+        this->screenCont->drawLine(80, 245, 370, 245, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
         if (nextEventIdx == -1)
         {
             // No upcoming events
@@ -257,13 +266,16 @@ void CalendarBar::drawEventInfo()
         else
         {
             // Display the upcoming event
-            this->screenCont->writeString(80, 250, (const char*)(this->calendarEvents[nextEventIdx].getTitle().c_str()), &Font12, BLACK, WHITE, 2, 0);
+            tempEvent = this->calendarEvents[nextEventIdx].getTitle().c_str();
+            if (tempEvent.length() > maxSmallChars)
+                tempEvent = tempEvent.substring(0, maxSmallChars - 3) + "...";
+            this->screenCont->writeString(80, 250, (const char*)(tempEvent.c_str()), &Font12, BLACK, WHITE, 2, 0);
         }
     }
     else
     {
         // If there are no events today, just display "No Event"
-        this->screenCont->writeString(100, 150, "No Event", &Font24, BLACK, WHITE, 2, 0);
+        this->screenCont->writeString(90, 150, "No Events Today", &Font16, BLACK, WHITE, 2, 0);
     }
     
 }
