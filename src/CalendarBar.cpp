@@ -217,7 +217,6 @@ void CalendarBar::drawEventInfo()
             
         }
 
-        // TODO: Needs checks in place to add a ... to any title that is too long to be displayed
         int maxSmallChars = 20;
         int maxBigChars = 13;
         String tempEvent = "";
@@ -253,6 +252,14 @@ void CalendarBar::drawEventInfo()
             if (tempEvent.length() > maxBigChars)
                 tempEvent = tempEvent.substring(0, maxBigChars - 3) + "...";
             this->screenCont->writeString(90, 150, (const char*)(tempEvent.c_str()), &Font16, BLACK, WHITE, 2, 0);
+            // Tell user when it ends
+            char buffer[16];
+            int tempMins = this->calendarEvents[currEventIdx].getEndTimeMins();
+            int tempHour = tempMins / 60;
+            if (tempHour > 12)
+                tempHour -= 12;
+            sprintf(buffer, "Ends at %d:%d%s", tempHour, tempMins % 60, tempHour > 11 ? "am" : "pm");
+            this->screenCont->writeString(90, 190, (const char*)(buffer), &Font24, BLACK, WHITE, 1, 1);
         }
         
         // Next event:
@@ -270,6 +277,14 @@ void CalendarBar::drawEventInfo()
             if (tempEvent.length() > maxSmallChars)
                 tempEvent = tempEvent.substring(0, maxSmallChars - 3) + "...";
             this->screenCont->writeString(80, 250, (const char*)(tempEvent.c_str()), &Font12, BLACK, WHITE, 2, 0);
+            // Tell user when it starts
+            char buffer[18];
+            int tempMins = this->calendarEvents[nextEventIdx].getStartTimeMins();
+            int tempHour = tempMins / 60;
+            if (tempHour > 12)
+                tempHour -= 12;
+            sprintf(buffer, "Starts at %d:%d%s", tempHour, tempMins % 60, tempHour > 11 ? "am" : "pm");
+            this->screenCont->writeString(80, 280, (const char*)(buffer), &Font12, BLACK, WHITE, 2, 0);
         }
     }
     else
