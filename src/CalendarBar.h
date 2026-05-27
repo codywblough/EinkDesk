@@ -21,6 +21,7 @@ class CalendarBar
     int pointerLength   = 10; // Length of the pointer
     int barWorkArea     = 0;  // Maximum size for the bar
     int dayTotalMinutes = 0;  // Total number of minutes per day
+    const int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     public:
     ScreenController *screenCont;
@@ -42,6 +43,9 @@ class CalendarBar
     void drawCalendarBar();
     void drawPointer();
     void drawEventInfo();
+    void drawCalendar();
+    int isLeapYear(int year);
+    int findStartingDay(int year, int month, int day);
 
 };
 

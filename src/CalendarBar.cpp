@@ -273,3 +273,118 @@ void CalendarBar::drawEventInfo()
     }
     
 }
+
+void CalendarBar::drawCalendar()
+{
+    int month = timeinfo->tm_mon + 1;
+    int year = timeinfo->tm_year + 1900;
+
+    // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    int firstDay = findStartingDay(year, month, 1);
+    int dayCount = daysInMonth[month - 1];
+    if (month == 2)
+        dayCount += isLeapYear(year);
+
+    // Each square of calendar is 30x30 pixels with 5 pixel spacing
+
+    int xStart = 105;
+    int yStart = 225;
+
+    // Print the day labels (S,M,T,W,T,F,S)
+    this->screenCont->writeString(xStart,        yStart, "S", &Font16, BLACK, WHITE, 2, 0);
+    this->screenCont->writeString(xStart+35*1+5, yStart, "M", &Font16, BLACK, WHITE, 2, 0);
+    this->screenCont->writeString(xStart+35*2+5, yStart, "T", &Font16, BLACK, WHITE, 2, 0);
+    this->screenCont->writeString(xStart+35*3+5, yStart, "W", &Font16, BLACK, WHITE, 2, 0);
+    this->screenCont->writeString(xStart+35*4+5, yStart, "T", &Font16, BLACK, WHITE, 2, 0);
+    this->screenCont->writeString(xStart+35*5+5, yStart, "F", &Font16, BLACK, WHITE, 2, 0);
+    this->screenCont->writeString(xStart+35*6+5, yStart, "S", &Font16, BLACK, WHITE, 2, 0);
+    yStart += 35;
+    // Draw squares for each day of the month
+    int curCol = firstDay;
+    int curRow = 0;
+    int tempX = 0;
+    int tempY = 0;
+    for (int i = 0; i < dayCount; i++)
+    {
+        // Move to the next row and reset the column
+        if ((i + firstDay) % 7 == 0 && i != 0)
+        {
+            curRow++;
+            curCol = 0;
+        }
+        tempX = xStart + curCol * 35;
+        tempY = yStart + curRow * 35;
+        if (timeinfo->tm_mday == i + 1)
+            this->screenCont->drawRectangle(tempX, tempY, tempX + 30, tempY + 30, BLACK, DOT_PIXEL_2X2, DRAW_FILL_FULL);
+        else
+            this->screenCont->drawRectangle(tempX, tempY, tempX + 30, tempY + 30, BLACK, DOT_PIXEL_2X2, DRAW_FILL_EMPTY);
+        curCol++;
+    }
+}
+
+int CalendarBar::isLeapYear(int year)
+{
+    return ((year % 4 == 0) && ((year % 400 == 0) || (year % 100 != 0)));
+}
+
+int CalendarBar::findStartingDay(int year, int month, int day)
+{
+    // Find year code
+    int temp = year % 100;
+    temp = temp * 1.25;
+    // Add month code
+    switch (month)
+    {
+        case 4: // Apr
+        case 7: // Jul
+            // += 0
+            break;
+        case 1: // Jan
+        case 10: // Oct
+            temp += 1;
+            break;
+        case 5: // May
+            temp += 2;
+            break;
+        case 8: // Aug
+            temp += 3;
+            break;
+        case 2: // Feb
+        case 3: // Mar
+        case 11: // Nov
+            temp += 4;
+            break;
+        case 6: // Jun
+            temp += 5;
+            break;
+        case 9: // Sep
+        case 12: // Dec
+            temp += 6;
+            break;
+        default: // This should NEVER be reached
+            return -1;
+    }
+    // Add century code
+    if (year >= 2000)
+    {
+        temp += 6;
+    }
+    else
+    {
+        return -1; // This really shouldn't happen either until 2100 or for some reason before the 2000s
+    }
+    // Add day number
+    temp += day;
+    // Adjust for leap years
+    if (month < 3)
+        temp -= isLeapYear(year); // If it is a leap year it will subtract 1
+    // Modulo by 7
+    temp = temp % 7;
+    // 1=Sun, 2=Mon, 3=Tue, 4=Wed, 5=Thu, 6=Fri, 0=Sat
+    // Adjust that number a little
+    temp -= 1;
+    if (temp < 0)
+        temp = 6;
+    // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    return temp;
+}

@@ -208,6 +208,7 @@ void update()
         calBar.drawCalendarBar();
         calBar.drawPointer();
         calBar.drawEventInfo();
+        calBar.drawCalendar();
         // Draw the clock/date
         displayTimeInfo();
         // Forecast update
