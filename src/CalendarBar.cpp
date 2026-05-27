@@ -190,14 +190,10 @@ void CalendarBar::drawEventInfo()
     if (this->eventCount > 0)
     {
         // If so, loop through them to see if currentMins falls between a start and end time for an event
-        int prevEventIdx = -1; // Default -1 so we can easily tell if there was nothing before
         int currEventIdx = -1; // Default -1 so we can easily tell if we aren't in an event
         int nextEventIdx = -1; // Default -1 so we can easily tell if there is nothing after
         for (int i = 0; i < this->eventCount; i++)
         {
-            // Save the index of the last event that ended
-            if (currentMins > this->calendarEvents[i].getEndTimeMins())
-                prevEventIdx = i;
             // Save the index of the next event that ended (and check that this hasn't been set yet so we don't keep reassigning)
             if (currentMins < this->calendarEvents[i].getStartTimeMins() && nextEventIdx == -1)
                 nextEventIdx = i;
@@ -222,28 +218,11 @@ void CalendarBar::drawEventInfo()
         String tempEvent = "";
 
         // Event printing handling:
-        // Previous event:
-        if (prevEventIdx == -1)
-        {
-            // No previous events
-            this->screenCont->writeString(80, 70, "No Event", &Font12, BLACK, WHITE, 2, 0);
-        }
-        else
-        {
-            // Display the previous event
-            tempEvent = this->calendarEvents[prevEventIdx].getTitle().c_str();
-            if (tempEvent.length() > maxSmallChars)
-                tempEvent = tempEvent.substring(0, maxSmallChars - 3) + "...";
-            this->screenCont->writeString(80, 70, (const char*)(tempEvent.c_str()), &Font12, BLACK, WHITE, 2, 0);
-        }
-        
-        // Current event:
-        // Draw a divider line
-        this->screenCont->drawLine(80, 145, 370, 145, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+        // Current Event:
         if (currEventIdx == -1)
         {
             // No event in progress
-            this->screenCont->writeString(90, 150, "No Event", &Font16, BLACK, WHITE, 2, 0);
+            this->screenCont->writeString(90, 70, "No Event", &Font16, BLACK, WHITE, 2, 0);
         }
         else
         {
@@ -251,7 +230,7 @@ void CalendarBar::drawEventInfo()
             tempEvent = this->calendarEvents[currEventIdx].getTitle().c_str();
             if (tempEvent.length() > maxBigChars)
                 tempEvent = tempEvent.substring(0, maxBigChars - 3) + "...";
-            this->screenCont->writeString(90, 150, (const char*)(tempEvent.c_str()), &Font16, BLACK, WHITE, 2, 0);
+            this->screenCont->writeString(90, 70, (const char*)(tempEvent.c_str()), &Font16, BLACK, WHITE, 2, 0);
             // Tell user when it ends
             char buffer[16];
             int tempMins = this->calendarEvents[currEventIdx].getEndTimeMins();
@@ -259,16 +238,16 @@ void CalendarBar::drawEventInfo()
             if (tempHour > 12)
                 tempHour -= 12;
             sprintf(buffer, "Ends at %d:%d%s", tempHour, tempMins % 60, tempHour > 11 ? "am" : "pm");
-            this->screenCont->writeString(90, 190, (const char*)(buffer), &Font24, BLACK, WHITE, 1, 1);
+            this->screenCont->writeString(90, 110, (const char*)(buffer), &Font24, BLACK, WHITE, 1, 1);
         }
         
         // Next event:
         // Draw a divider line
-        this->screenCont->drawLine(80, 245, 370, 245, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+        this->screenCont->drawLine(80, 150, 370, 150, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
         if (nextEventIdx == -1)
         {
             // No upcoming events
-            this->screenCont->writeString(80, 250, "No Event", &Font12, BLACK, WHITE, 2, 0);
+            this->screenCont->writeString(80, 155, "No Event", &Font12, BLACK, WHITE, 2, 0);
         }
         else
         {
@@ -276,7 +255,7 @@ void CalendarBar::drawEventInfo()
             tempEvent = this->calendarEvents[nextEventIdx].getTitle().c_str();
             if (tempEvent.length() > maxSmallChars)
                 tempEvent = tempEvent.substring(0, maxSmallChars - 3) + "...";
-            this->screenCont->writeString(80, 250, (const char*)(tempEvent.c_str()), &Font12, BLACK, WHITE, 2, 0);
+            this->screenCont->writeString(80, 155, (const char*)(tempEvent.c_str()), &Font12, BLACK, WHITE, 2, 0);
             // Tell user when it starts
             char buffer[18];
             int tempMins = this->calendarEvents[nextEventIdx].getStartTimeMins();
@@ -284,13 +263,13 @@ void CalendarBar::drawEventInfo()
             if (tempHour > 12)
                 tempHour -= 12;
             sprintf(buffer, "Starts at %d:%d%s", tempHour, tempMins % 60, tempHour > 11 ? "am" : "pm");
-            this->screenCont->writeString(80, 280, (const char*)(buffer), &Font12, BLACK, WHITE, 2, 0);
+            this->screenCont->writeString(80, 185, (const char*)(buffer), &Font12, BLACK, WHITE, 2, 0);
         }
     }
     else
     {
         // If there are no events today, just display "No Event"
-        this->screenCont->writeString(90, 150, "No Events Today", &Font16, BLACK, WHITE, 2, 0);
+        this->screenCont->writeString(90, 70, "No Events Today", &Font16, BLACK, WHITE, 2, 0);
     }
     
 }
