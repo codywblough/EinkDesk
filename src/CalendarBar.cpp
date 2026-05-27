@@ -269,7 +269,7 @@ void CalendarBar::drawEventInfo()
     else
     {
         // If there are no events today, just display "No Event"
-        this->screenCont->writeString(90, 70, "No Events Today", &Font16, BLACK, WHITE, 2, 0);
+        this->screenCont->writeString(90, 70, "Schedule Clear", &Font16, BLACK, WHITE, 2, 0);
     }
     
 }
